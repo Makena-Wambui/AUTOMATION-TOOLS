@@ -16,26 +16,25 @@ Automation plays an essential role in SCM. It is the mechanism used to make a se
 
 Automation is the heart of configuration management for servers. This is why CM tools are referrd to as Automation tools or IT Automation tools.
 
-Server Orchestration/ IT Orchestration -> A term used to describe the automation features implemented by configuration management tools since these tools are capable of managing one to hundreds of servers from a central controller machine.
+Server Orchestration/ IT Orchestration: A term used to describe the automation features implemented by configuration management tools since these tools are capable of managing one to hundreds of servers from a central controller machine.
 CM Tools available in the market: Puppet, Ansible, Chef, Salt.
 Each tool has its own characteristics, and works in slightly different ways.
 They all have the same purpose.
-To ensure the system's state matches the state matches the state described by your provisioning scripts.</p>
+To ensure the system's state matches the state matches the state described by your provisioning scripts.
+		</p>
 
-Benefits of Configuration Management for Servers
-------------------------------------------------
+		<p>Benefits of Configuration Management for Servers
+
 The use of CM typically requires more initial planning and effort than manual system adminstration.
 all but the simplest of server infrastructures will improve from the benefits it provides.
 
 	1. Quick provisioning of new servers:
----------------------------------------------------
 When you need to deploy a new server (ie deploying means making a server operational) a CM tool can utomate most, if not all of the provisioning process for you. (Provisioning is setting up a server for use within a network.)
 Automation makes provisioning much quicker and more efficient.
 It allows tedious tasks to be performed faster and more accurately than any human could.
 Even with proper and thorough documentation, manually deploying a web server for ex could take hours compared to a few minutes with CM.
 
 	2. Quick recovery from critical events:
---------------------------------------------------
 Another benefit of quick provisioning.
 Quickly recover from critical events.
 Sometimes a server may go offline due to unknown circumstances.
@@ -44,37 +43,32 @@ In such a scenario, deploying a replacement server is the safest way to get your
 With CM and Automation, this can be done in a quick and reliable way.
 
 	3. No More Snowflake Servers:
---------------------------------------
 Manual system adminstration may seem like an easy  way to deploy and quickly fix servers.
 But it comes with a price.
 With time, it becomes difficult to know exactly what is installed on a server and which changes were made, when the process is not automated.
 Manual hotfixes, configuration tweaks and software updates can turn servers into unique snowflakes that are hard to manage and replicate.But by using a CM tool, procedure necessary for bringing up a new server or updating an existing one will be documented in the provisioning scripts.
 
 	4. Version Control for the Server Environment
---------------------------------------------------------
 So you have your server set up translated into a set of provisioning scripts.
 Now you have the ability to apply to your server environment many of the tools and workflows you normally use for software source code.
 Version control tools like git, can be used to keep track of changes made to the provisioning, and to maintain separate branches for legacy versions of the scripts(versions that have reached their end of life or are not actively maintained.) 
 Version control can also be used to implement a code review policy for the provisioning scripts -> any changes shd be submitted as a pull request and approved by a project lead before being accepted. 
 	5. Replicated environments:
----------------------------------------
 CM makes it trivial to replicate environments with the same exact software and configurations.
 Enables you to build multistage ecosystems with production, development and testing servers.
 You could even use local virtual machines for development built with the same provisioning scripts.
 This minimizes problems caused by environment discrepancies that occur when applications are deployed to production or shared btwn coworkers with diff machine setups ie diff OS, Software versions, Software Configurations.
-
-OVERVIEW OF CONFIGURATION MANAGEMENT TOOLS
--------------------------------------------
+		</p>
+		<p>OVERVIEW OF CONFIGURATION MANAGEMENT TOOLS
 Each CM tool has its own terms, philosophy and ecosystem.
 They share many characteristics and have similar concepts.
 Most CM tools use a controller/master and node/agent model.
 The controller directs the configuration of the nodes, based on a series of instructions or tasks defined in your provisioning scripts.
 	Most Common Features present in most configuration mgt tools for servers:
-------------------------------------------------------------------------------------
 1. Automation framework
 Provides a specific syntax and a set of features you can use to write your provisioning scripts.
 Most CM toolshave features that make their language similar to conventional programming languages, but more simpler.
-Variables, loops, conditionals -> common features provided to create enable the creation of more versatile provisioning scripts. 
+Variables, loops, conditionals: common features provided to create enable the creation of more versatile provisioning scripts. 
 
 2. Idempotent behavior
 CM Tools keep track of the state of resources so as to avoid repeating tasks that were executed before.
@@ -108,14 +102,15 @@ CM Tools have a strong community built around them, where users are encouraged t
 
 Using extensions provided by other users saves you alot of time.
 Also serves as an excellent way of learning how others solved common problems using your tool of choice.
+		</p>
 
-CHOOSING A CM TOOL
-------------------
+		<p>CHOOSING A CM TOOL
 Many CM Tools available in the market. 
 Each has a different set of features and complexity levels. 
 Puppet, Chef, Ansible.
 Choose a tool that is a good fit for your needs.
 Things to consider befor choosing a tool:
+		</p>
 	</body>
 
 </html>
