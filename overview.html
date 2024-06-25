@@ -104,13 +104,28 @@ Using extensions provided by other users saves you alot of time.
 Also serves as an excellent way of learning how others solved common problems using your tool of choice.
 		</p>
 
-		<p>CHOOSING A CM TOOL
-Many CM Tools available in the market. 
-Each has a different set of features and complexity levels. 
-Puppet, Chef, Ansible.
-Choose a tool that is a good fit for your needs.
-Things to consider befor choosing a tool:
-		</p>
+		<h2>CHOOSING A CM TOOL</h2>
+		<p>Many CM Tools available in the market. 
+		Each has a different set of features and complexity levels. 
+		Puppet, Chef, Ansible.
+		Choose a tool that is a good fit for your needs.</p>
+
+		<h3>Things to consider befor choosing a CM tool:</h3>
+		<h4>Infrastructure Complexity</h4>
+		<p>Most CM tools require a minimum hierarchy that consists of a controller machine and a node managed by
+		the controller machine.
+		For ex Puppet requires an agent application to be installed on each node,
+		and a master application to be installed on the controller machine.
+		Ansible has a decentralized structure.
+		It does not require installation of additional software on the nodes.
+		It relies on SSH to execute the provisioning tasks.
+		For a small project a simplified infrastructure might seem like a better fit.
+		However remember to take into consideration aspects like scalability and security, which may not be
+		provided by the tool.
+
+		Also some tools have more components and moving parts.
+		This might increase the complexity of your infrastructure hence impacting on the learning curve,
+		as well as increasing the cost of implementation.</p>
 	</body>
 
 </html>
