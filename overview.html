@@ -10,23 +10,31 @@
 		<h1>An Introduction to Configuration Management</h1>
 
 		<p>Configuration Mnagement: (CM)
-		Refers to the process of systematically handling changes to a system in a way that it mantains integrity over time.The term broadly refers to server configuration management.
+		Refers to the process of systematically handling changes to a system in a way that it mantains 
+		integrity over time.
+		The term broadly refers to server configuration management.</p>
 
-Automation plays an essential role in SCM. It is the mechanism used to make a server reach a desirable state, previously defined by provisioning scripts using a tool's specific language and features.
+		<p>
+		Automation plays an essential role in SCM.
+		It is the mechanism used to make a server reach a desirable state,
+		previously defined by provisioning scripts using a tool's specific language and features.
 
-Automation is the heart of configuration management for servers. This is why CM tools are referrd to as Automation tools or IT Automation tools.
+		Automation is the heart of configuration management for servers. This is why CM tools are referred to
+		as Automation tools or IT Automation tools.</p>
 
-Server Orchestration/ IT Orchestration: A term used to describe the automation features implemented by configuration management tools since these tools are capable of managing one to hundreds of servers from a central controller machine.
-CM Tools available in the market: Puppet, Ansible, Chef, Salt.
-Each tool has its own characteristics, and works in slightly different ways.
-They all have the same purpose.
-To ensure the system's state matches the state matches the state described by your provisioning scripts.
-		</p>
+		<p>Server Orchestration/ IT Orchestration: 
+		A term used to describe the automation features implemented by configuration management tools
+		since these tools are capable of managing one to hundreds of servers from a central controller machine.
 
-		<p>Benefits of Configuration Management for Servers
+		CM Tools available in the market: Puppet, Ansible, Chef, Salt.
+		Each tool has its own characteristics, and works in slightly different ways.
+		They all have the same purpose.
+		And that is to ensure the system's state matches the state described by your provisioning scripts.</p>
 
-The use of CM typically requires more initial planning and effort than manual system adminstration.
-all but the simplest of server infrastructures will improve from the benefits it provides.
+		<h2>Benefits of Configuration Management for Servers</h2>
+
+		<p>The use of CM typically requires more initial planning and effort than manual system adminstration.
+		all but the simplest of server infrastructures will improve from the benefits it provides.</p>
 
 	1. Quick provisioning of new servers:
 When you need to deploy a new server (ie deploying means making a server operational) a CM tool can utomate most, if not all of the provisioning process for you. (Provisioning is setting up a server for use within a network.)
@@ -111,9 +119,10 @@ Also serves as an excellent way of learning how others solved common problems us
 		Choose a tool that is a good fit for your needs.</p>
 
 		<h3>Things to consider befor choosing a CM tool:</h3>
-		<h4>Infrastructure Complexity</h4>
+		<h4>1.Infrastructure Complexity</h4>
 		<p>Most CM tools require a minimum hierarchy that consists of a controller machine and a node managed by
 		the controller machine.
+
 		For ex Puppet requires an agent application to be installed on each node,
 		and a master application to be installed on the controller machine.
 		Ansible has a decentralized structure.
@@ -126,6 +135,88 @@ Also serves as an excellent way of learning how others solved common problems us
 		Also some tools have more components and moving parts.
 		This might increase the complexity of your infrastructure hence impacting on the learning curve,
 		as well as increasing the cost of implementation.</p>
+
+		<h4>2.Learning Curve</h4>
+		<p>CM tools provide a custom syntax, sometimes using a Domain Specific Language.
+		They have a set of features that comprise their framework for automation.
+		Just like conventional programming languages, some tools demand a higher learning curve to be mastered.
+		The infrastructure requirements might also influence the complexity of the tool and how quickly
+		you will be able to see a return of investment.</p>
+
+		<h4>3.Cost</h4>
+		<p>Most CM Tools offer free or open source versions with paid subscriptions for advanced features and services.
+		Some tools have more limitations than others.
+		Depending on your specific needs and how your infrastructure grows, you might end up
+		having to pay for these services.
+		Training is also a potential cost. Not just moneywise but also how long it will take to get your team up to speed
+		with your tool of choice.
+		</p>
+
+		<h4>4.Advanced Tooling</h4>
+		<p>Most tools offer paid services that can include support, extensions and advanced tooling.
+		Analyze your specific needs, the size of your infrastructure, and whether or not
+		there is a need for using these services.
+		For ex Management Panels are a common service offered by these tools.
+		They can greatly facilitate the process of managing and monitoring all servers from a central point.
+		Even if you do not need such a service presently, it might be a future necessity.
+		</p>
+
+		<h4>5.Community And Support</h4>
+		<p>A strong and welcoming community can be resourceful for support and documentation,
+		where users can share their knowledge and extensions(modules, plugins and provisioning scripts.)
+		This helps to speed up your learning curve, and avoid extra costs with paid support and training.</p>
+
+		<h4>Overview of Popular Tools</h4>
+		<p>These are the main differences between the three most popular configuration tools: Ansible, Puppet, Chef.
+
+		<h5>Script Language</h5>
+		<ul>
+			<li>Ansible : YAML.</li>
+			<li>Puppet: Custom DSL based on Ruby.</li>
+			<li>Chef : Ruby</li>
+		</ul>
+
+		<h5>Infrastructure</h5>
+		<ul>
+			<li>Ansible : Controller Machine applies configuration on nodes via SSH.</li>
+			<li>Puppet : Puppet Master synchronizes configuration on Puppet Nodes.</li>
+			<li>Chef : Chef Workstations push configuration to server, from where the Chef nodes will be updated.</li>
+		</ul>
+
+		<h5>Requires Specialized Software for Nodes</h5>
+		<ul>
+			<li>Ansible : No</li>
+			<li>Puppet : Yes</li>
+			<li>Chef : Yes</li>
+		</ul>
+
+		<h5>Requires Centralized Point Of Control</h5>
+		<ul>
+			<li>Ansible : No. Any computer can be a controller.</li>
+			<li>Puppet : Yes. Via Puppet Master.</li>
+			<li>Chef : Yes. Via Chef Server.</li>
+		</ul>
+
+		<h5>Script Terminology</h5>
+		<ul>
+			<li>Ansible : Playbook/Roles</li>
+			<li>Puppet : Manifests/Modules</li>
+			<li>Chef : Recipes/Cookbooks</li>
+		</ul>
+
+		<h5>Task Execution Order</h5>
+		<ul>
+			<li>Ansible : Sequential</li>
+			<li>Puppet : Non-sequential</li>
+			<li>Chef : SEquential</li>
+		</ul>
+
+		<h2>CONCLUSION</h2>
+		<p>Configuration Management can greatly improve the integrity of servers by providing a framework for
+		automating processes and keeping track of changes made to the system environment.
+		Next we look at how to implement a configuration mgt strategy in practice using Puppet as a tool.</p>
+
+
 	</body>
 
 </html>
