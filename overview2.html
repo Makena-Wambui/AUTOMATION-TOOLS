@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width initial-scale=1.0">
+		<title>PUPPET</title>
+		<style>
+			pre {
+				color: #ff0000;
+				padding: 25px;
+				overflow: auto;
+				font-family: "Verdana";
+
+			}
+
+			body {
+				line-height: 1.5;
+				font-family: 'Courier New';
+				font-size: 30px;
+			}
+
+		</style>
+	</head>
+
+	<body>
+		<h1>INTRODUCTION</h1>
+		<p>Server configuration mgt which is also known as IT Automation is a solution for
+		turning your infrastructure adminstration into a codebase that describes all processes necessary for 
+		deploying a server in a set of provisioning scripts that can be versioned and easily reused.
+		Greatly improves the integrity of any server infrastructure over time.</p>
+
+		<p>Let us walk through the process of automating server provisioning using Puppet.
+		Puppet is a popular configuration mgt tool that can manage complex infrastructure in a transparent way,
+		using a master server that orchestrates the configuration of the nodes.
+
+		We focus on the language terminology, syntax and features needed to create a simple example
+		to fully automate the deployment of an Ubuntu web server using Apache.
+
+		These are the steps we need to automate in order to reach our goal.
+		<ol>
+			<li>Update the apt cache</li>
+			<li>Install apache.</li>
+			<li>Create a custom document root directory.</li>
+			<li>Place index.html file in custom document root.</li>
+			<li>Apply a template to set up our custom virtual host.</li>
+			<li>Restart Apache</li>
+		</ol>
+
+		First we will look at the terminology used by Puppet.
+		Then an overview of the main language features that can be used to write Manifests.
+		</p>
+
+		<h2>Getting Started</h2>
+		<p>Let us get acquainted with important terminology and concepts introduced by this tool.
+
+		<h3>Puppet Terms</h3>
+		<ul>
+			<li><b>Puppet Master</b> : Master Server. Controls configuration on the nodes.</li>
+			<li><b>Puppet Agent Node</b> : A node controlled by a Puppet Master.</li>
+			<li><b>Manifest</b> : A file that contains a set of instructions to be executed.</li>
+			<li><b>Resource</b> : A portion of code that declares an element of the system
+				and how its state should be changed. For ex to install a package, define a <i>package</i> resource
+				then ensure its state is set to <b>installed</b>.</li>
+			<li><b>Module</b> : A collection of manifests and other related files.
+				They are organized in a predefined way to facilitate sharing and reusing parts of a provisioning.</li>
+			<li><b>Classes</b> : Are used to better organize the provisioning and make it easier to reuse
+				portions of the code</li>
+			<li><b>Facts</b> : Global variables that contain detailed information about the system
+				eg network interfaces, OS, IP addresses, distribution.</li>
+			<li><b>Services</b> : Used to trigger service status changes eg restarting or stopping a service.</li>
+		</ul>
+		</p>
+		<p>Puppet provisionings are written using a custom DSL based on Ruby.
+
+		Resources, tasks or steps are defined by declaring <em>resources</em>.
+
+		Resources can be packages, files, commands, services, users.
+
+		They might have a state, which triggers a system change in case the state of the declared resource
+		is different from what is currently on the system.
+		
+		For ex a <em>package</em> resource set to <i>installed</i> on your manifest will trigger
+		a package installation on the system if the package was not previously installed.
+
+		A <code><i>package</i></code> resource would look like this:
+
+		<pre>
+		package { 'nginx':
+				ensure => 'installed'
+			}
+		</pre>
+
+		To execute any arbitrary command, declare <i>exec resource</i>.
+
+		<pre>
+		exec { 'apt-get update':
+				command => '/usr/bin/apt-get update'
+		}
+		</pre>
+
+		The <i>apt-get update</i> portion on the first line is not the actual command declaration.
+		It is just an identifier for this unique resource.
+
+		Often we need to reference other resources from within a resource. For that we use their identifier.
+
+		In our exec example above, the identifier is apt-get update, but it could be any other string.
+		</p>
+
+		<h3>Resource Dependency</h3>
+		<p>Keep in mind Puppet does not evaluate resources in the same order they are defined.
+		This can cause confusion for those getting started with Puppet.
+		Resources must explicitly define dependency btwn each other.
+		There is no guarantee of which resource will be evaluated, and consequently executed first.
+
+		For example:
+			You want to execute a command.
+			But you want to make sure a dependency is installed first.
+			<pre>
+			package { 'python-software-properties':
+					ensure => 'installed'
+			}
+
+			exec { 'add-repo':
+					command => '/usr/bin/add-apt-repository ppa:ondrej/php5 -y'
+					require => Package['python-software-properties']
+			}
+			</pre>
+
+			<i>require option</i> receives as parameter a reference to another resource.
+			In our case, we are referring to the Package resource identified as python-software-properties.
+			Note that we use <i>exec, package etc in lowercase</i> when declaring resources,
+			but use <i>Exec, Package etc (capitalized)</i> when referring to prevoiusly defined resources.
+
+			You might also need to make sure a task is executed before another.
+			For such a case, use the <b>before</b> option.
+
+			<pre>
+			package { 'curl':
+					ensure => 'installed'
+					before => Exec['install script']
+			}
+
+			exec { 'install script':
+					command => '/usr/bin/curl http://example.com/some-script.sh
+			}
+			</pre>
+			</p>
+
+			<h3>Manifest Format</h3>
+			<p>Manifests are basically a collection of resource declarations.
+			Manifests use the extension <b>.pp</b>.
+			Below is a simple manifest that performs two tasks: update the <i>apt cache</i>,
+			and <i>installs vim</i> afterwards.
+
+			<pre>
+			exec { 'update-apt-cache':
+					command => '/usr/bin/apt-get update'
+			}
+
+			package { 'vim':
+					ensure => 'installed',
+					require => Exec['update-apt-cache'],
+			}
+			</pre>
+			</p>
+
+			<p>
+
+			<h3>Writing Manifests</h3>
+			<h4>Variables</h4>
+			<p>Variables can be defined at any point in a manifest.
+			Most common types of variables: strings, and arrays of strings.
+			Other types are also supported such as booleans and hashes.
+			Here we define a string variable that is then used inside a resource.
+
+			<pre>
+			$pkg = 'vim'
+			package { $pkg:
+					ensure => 'installed'					
+			}
+			</pre></p>
+
+			<h4>Using Loops</h4>
+			<p>Loops are used to repeat a task using different input values.
+			For ex instead of creating ten tasks to install ten diff packages,
+			you can create a single task, and use a loop to repeat the task
+			with all the different packages you want to install.
+
+			The simplest way to repeat a task with different values in Puppet is to use Arrays.
+
+			<pre>
+			$pkgs = ['vim', 'git', 'wget']
+			package { $pkgs:
+					ensure => 'installed'
+			}
+			</pre>
+
+			Puppet also provides additional ways to iterate through tasks.
+			This example does the same thing as the above code,
+			but here we use the <i>each</i> iterator.
+			This provides more flexibility for looping through resource definitions.
+
+			<pre>
+			$pkgs.each |String $pkg| {
+			  package { $pkg:
+			  		ensure => 'installed'
+			  }
+			}
+			</pre>
+			</p>
+
+			<h4>Conditionals</h4>
+			<p>Conditionals can be uses to dynamically decide whether a block of code
+			should be executed or not, based on ex a variable or an
+			output from a command.
+			Most of the conditional structures found in traditional programming languages are
+			supported, for ex if/else, case statements.
+			Also, some resources like exec support attributes that work like a conditional,
+			but only accept a command output as a condition.
+
+			You may be wanting to execute a command based on a <em>fact</em>.
+			Therefore you will want to test the value of a variable.
+			And use one of the conditional structures supported like if/else.
+
+			<pre>
+			if $osfamily != 'Debian' {
+				warning('This manifest is not supported on this OS.')
+			}
+			else {
+				notify {'Good to go!':}
+			}
+			</pre>
+
+			You migt also want to condition the execution of a command based on the output from another command.
+			You can use <i>onlyif</i> and <i>unless</i> in such cases.
+			For ex this command will only be executed when the output from <i>/bin/which php</i> is successful
+			ie the command exits with status 0.
+			<pre>
+			exec { 'Test':
+					command => '/usr/bin/echo Python is installed here > /tmp/test.txt'
+					onlyif => '/usr/bin/which python'
+			}
+			</pre>
+			<i>unless</i>will execute the command all times except when the command under <i>unless</i>
+			exits successfully.
+
+			<pre>
+			exec { "Test2":
+				command => '/usr/bin/echo Testing unless > /tmp/test2.txt'
+				unless => '/usr/bin/which php'
+			}
+			</pre>
+			</p>
+
+			<h4>Working with templates</h4>
+			<p>Templates are used to set up configuration files.
+			They allow the use of variables and other features that makes these files versatile and reusable.
+			There are two diff formats for templates:
+			<ul>
+				<li>Embedded Puppet(EPP)</li>
+				<li>Embedded Ruby(ERB)</li>
+			</ul>
+			EPP format only works for recent versions of Puppet(from 4.0.)
+
+			Below is an ex of an ERB Template for setting up an Apache virtual host.
+			We are using a variable for setting up the document root for this host.
+
+			<pre>
+			VirtualHost *:80
+    				ServerAdmin webmaster@localhost
+    				DocumentRoot <%= @doc_root %>
+
+    				Directory <%= @doc_root %>				
+        				AllowOverride All
+        				Require all granted
+				Directory
+			VirtualHost
+			</pre>
+
+			To apply the template above, we create a <b>file</b> resource that renders the template
+			content using the <b>template</b> method.
+			Below is how to apply the template to replace the default Apache virtual host file:
+			<pre>
+			file { '/etc/apache2/sites-available/000-default.conf':
+					ensure => 'present',
+					content => template('apache2/vhost.erb'),
+			}
+			</pre>
+			When dealing with local files, Puppet makes a few assumptions so as to enforce organization 
+			and modularity. 
+			In our template example, Puppet would look for a <i>vhost.erb template file</i> in
+			the <i>apache2/templates folder</i>, inside modules directory.
+			</p>
+
+			<h4>Defining and Triggering Services</h4>
+			<p>Service resources are used to ensure services are initialized and enabled.
+			Also used to trigger service restarts.
+
+			Consider our previous template usage example, where we set up our Apache virtual host.
+			We would like to make sure Apache is restarted after a virtual host change,
+			so we create a service resource for the Apache service.
+
+			<pre>
+			service { 'apache2':
+					ensure => 'running',
+					enable => true,
+			}
+			</pre>
+
+			So now when we define our file resource, we include a <i><b>notify</b> option to trigger a restart</i>.
+			</p>
+
+			<pre>
+			file { '/etc/apache2/sites-enabled/000-default.conf':
+					ensure => 'present',
+					content => template('apache2/vhost.erb'),
+					notify => Service['apache2'],
+			}
+			</pre>
+	</body>
